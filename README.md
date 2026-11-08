@@ -76,3 +76,11 @@ Signed-in users can open **Settings** from the home page to change their passwor
 To enable GitHub, create a GitHub OAuth App and set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` on the server, then restart it. Use `http://localhost:3000/api/auth/callback/github` as the authorization callback URL locally, or `<BETTER_AUTH_URL>/api/auth/callback/github` in production. Use separate OAuth apps for local and production environments. The default GitHub scopes include `user:email`.
 
 The GitHub account must have a verified email matching the app account. Connections are added explicitly from settings; implicit account linking and new GitHub-only registrations are disabled. See the [Better Auth GitHub setup](https://better-auth.com/docs/authentication/github) and [account linking documentation](https://better-auth.com/docs/concepts/users-accounts).
+
+## Favorites lists
+
+Signed-in users can open **My favorites** to add TV shows using an IMDb ID or title URL, remove entries, and publish or privatize their list. Lists start private. Publishing shares the whole list through a stable URL; making it private blocks subsequent public reads. Publishing again restores access through the same URL. Public pages omit owner details.
+
+Set the server-only `OMDB_API_KEY` in `.env` and restart the server to enable validation. Without it, additions fail safely with a retry message; saved lists remain readable and editable. Entries currently show only IMDb IDs and links. Display metadata is deferred.
+
+Before production use, check representative miniseries such as `tt7366338` and `tt0185906` with your OMDb key: successful responses must match the requested IMDb ID and report `Type: "series"`. The live compatibility check passed for both miniseries and series `tt11280740`; each returned its matching IMDb ID and `Type: "series"`. Browser tests use a server-side OMDb fixture and never consume provider quota.

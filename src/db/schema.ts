@@ -1,4 +1,4 @@
-import { boolean, index, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { boolean, index, pgTable, text, timestamp, unique } from 'drizzle-orm/pg-core'
 
 export const user = pgTable('user', {
   id: text('id').primaryKey(),
@@ -72,4 +72,26 @@ export const verification = pgTable(
       .notNull(),
   },
   (table) => [index('verification_identifier_idx').on(table.identifier)],
+)
+
+export const favoritesList = pgTable('favorites_list', {
+  id: text('id').primaryKey(),
+  userId: text('user_id')
+    .notNull()
+    .unique()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  isPublic: boolean('is_public').default(false).notNull(),
+})
+
+export const favoriteEntry = pgTable(
+  'favorite_entry',
+  {
+    id: text('id').primaryKey(),
+    listId: text('list_id')
+      .notNull()
+      .references(() => favoritesList.id, { onDelete: 'cascade' }),
+    imdbId: text('imdb_id').notNull(),
+    addedAt: timestamp('added_at').defaultNow().notNull(),
+  },
+  (table) => [unique('favorite_entry_list_imdb_unique').on(table.listId, table.imdbId)],
 )
