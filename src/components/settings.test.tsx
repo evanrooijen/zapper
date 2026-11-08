@@ -57,7 +57,10 @@ test('signed-in settings renders labeled password controls and waits for connect
   expect(html).toContain('name="confirmPassword"')
   expect(html).toContain('Update password')
   expect(html).toContain('Loading connected accounts')
-  expect(html).toContain('Connect GitHub')
+  expect(html).toContain('aria-busy="true"')
+  expect(html).toContain('role="status"')
+  expect(html.match(/data-slot="skeleton"/g)).toHaveLength(3)
+  expect(html).not.toContain('data-slot="badge"')
 })
 
 test('settings hides the GitHub connection button when GitHub is not configured', () => {

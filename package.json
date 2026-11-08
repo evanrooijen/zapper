@@ -25,6 +25,7 @@
   "dependencies": {
     "@base-ui/react": "latest",
     "@better-auth/drizzle-adapter": "^1.7.18",
+    "@icons-pack/react-simple-icons": "^13.15.1",
     "@neondatabase/serverless": "^1.2.0",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "latest",
@@ -35,6 +36,7 @@
     "better-auth": "^1.7.18",
     "class-variance-authority": "latest",
     "clsx": "latest",
+    "cn": "^0.5.2",
     "drizzle-orm": "^0.45.4",
     "lucide-react": "latest",
     "pg": "^8.23.1",

@@ -1,19 +1,18 @@
 import { useEffect, useState } from 'react'
-import { createServerFn } from '@tanstack/react-start'
+import SiGithub from '@icons-pack/react-simple-icons/icons/SiGithub'
 import { useForm } from '@tanstack/react-form'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { authClient } from '@/lib/auth-client'
+import { getAuthSettings } from '@/lib/auth-settings'
 import { passwordChangeSchema } from '@/lib/auth-validation'
 import { ModeToggle } from '@/components/mode-toggle'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Field, FieldLabel, FieldGroup, FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-
-const getAuthSettings = createServerFn({ method: 'GET' }).handler(() => ({
-  githubEnabled: Boolean(process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET),
-}))
+import { Skeleton } from '@/components/ui/skeleton'
 
 export const Route = createFileRoute('/settings')({
   validateSearch: (search: Record<string, unknown>): { error?: string } => ({
@@ -243,20 +242,40 @@ function AccountSettings({
               : 'Manage your connected accounts.'}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          {accounts === null && !accountError && <p role="status">Loading connected accounts…</p>}
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <p>GitHub{githubConnected ? ' — Connected' : ''}</p>
-            {githubEnabled && (
-              <Button
-                variant="outline"
-                disabled={!accounts || githubConnected || connecting}
-                onClick={() => void connectGitHub()}
-              >
-                {githubConnected ? 'Connected' : connecting ? 'Connecting…' : 'Connect GitHub'}
-              </Button>
-            )}
-          </div>
+        <CardContent className="flex flex-col gap-4" aria-busy={accounts === null && !accountError}>
+          {accounts === null && !accountError ? (
+            <div
+              role="status"
+              className="flex min-h-18 flex-wrap items-center justify-between gap-4 sm:min-h-9"
+            >
+              <span className="sr-only">Loading connected accounts…</span>
+              <Skeleton className="mr-auto h-5 w-20" aria-hidden="true" />
+              {githubEnabled && <Skeleton className="h-9 w-36" aria-hidden="true" />}
+              <Skeleton className="h-5 w-24" aria-hidden="true" />
+            </div>
+          ) : (
+            <div className="flex min-h-18 flex-wrap items-center justify-between gap-4 sm:min-h-9">
+              <p className="mr-auto flex items-center gap-2">
+                <SiGithub size={16} aria-hidden="true" />
+                GitHub
+              </p>
+              {githubEnabled && !githubConnected && (
+                <Button
+                  variant="outline"
+                  disabled={!accounts || connecting}
+                  onClick={() => void connectGitHub()}
+                >
+                  <SiGithub data-icon="inline-start" aria-hidden="true" />
+                  {connecting ? 'Connecting…' : 'Connect GitHub'}
+                </Button>
+              )}
+              {accounts !== null && (
+                <Badge variant={githubConnected ? 'default' : 'secondary'}>
+                  {githubConnected ? 'Connected' : 'Not connected'}
+                </Badge>
+              )}
+            </div>
+          )}
           {oauthError && (
             <Alert variant="destructive">
               <AlertDescription>

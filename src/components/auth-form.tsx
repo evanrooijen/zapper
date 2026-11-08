@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useForm } from '@tanstack/react-form'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { LoaderCircle } from 'lucide-react'
+import SiGithub from '@icons-pack/react-simple-icons/icons/SiGithub'
 import { authClient } from '@/lib/auth-client'
 import { loginSchema, registrationSchema } from '@/lib/auth-validation'
 import { Button } from '@/components/ui/button'
@@ -17,10 +18,37 @@ import { Field, FieldLabel, FieldGroup, FieldError } from '@/components/ui/field
 import { Input } from '@/components/ui/input'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
-export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
+export function AuthForm({
+  mode,
+  githubEnabled = false,
+  oauthError,
+}: {
+  mode: 'login' | 'register'
+  githubEnabled?: boolean
+  oauthError?: string
+}) {
   const registering = mode === 'register'
   const navigate = useNavigate()
   const [error, setError] = useState('')
+  const [githubPending, setGithubPending] = useState(false)
+  async function loginWithGitHub() {
+    setError('')
+    setGithubPending(true)
+    try {
+      const result = await authClient.signIn.social({
+        provider: 'github',
+        callbackURL: '/',
+        errorCallbackURL: '/login',
+      })
+      if (result.error) {
+        setError('Unable to log in with GitHub. Please try again.')
+        setGithubPending(false)
+      }
+    } catch {
+      setError('Unable to connect. Please try again.')
+      setGithubPending(false)
+    }
+  }
   const form = useForm({
     defaultValues: { name: '', email: '', password: '' },
     validators: { onSubmit: registering ? registrationSchema : loginSchema },
@@ -52,9 +80,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
             <h1>{registering ? 'Create an account' : 'Welcome back'}</h1>
           </CardTitle>
           <CardDescription>
-            {registering
-              ? 'Enter your details to get started.'
-              : 'Log in with your email and password.'}
+            {registering ? 'Enter your details to get started.' : 'Log in to your account.'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -105,14 +131,21 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
                   }}
                 </form.Field>
               ))}
-              {error && (
+              {(error || oauthError) && (
                 <Alert data-testid="auth-error" variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
+                  <AlertDescription>
+                    {error ||
+                      'GitHub login failed. Log in with your email and password and link GitHub in Settings before trying again.'}
+                  </AlertDescription>
                 </Alert>
               )}
               <form.Subscribe selector={(state) => state.isSubmitting}>
                 {(submitting) => (
-                  <Button data-testid="auth-submit" type="submit" disabled={submitting}>
+                  <Button
+                    data-testid="auth-submit"
+                    type="submit"
+                    disabled={submitting || githubPending}
+                  >
                     {submitting && (
                       <LoaderCircle data-icon="inline-start" className="animate-spin" />
                     )}
@@ -120,6 +153,25 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
                   </Button>
                 )}
               </form.Subscribe>
+              {!registering && githubEnabled && (
+                <form.Subscribe selector={(state) => state.isSubmitting}>
+                  {(submitting) => (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={submitting || githubPending}
+                      onClick={() => void loginWithGitHub()}
+                    >
+                      {githubPending ? (
+                        <LoaderCircle data-icon="inline-start" className="animate-spin" />
+                      ) : (
+                        <SiGithub data-icon="inline-start" aria-hidden="true" />
+                      )}
+                      {githubPending ? 'Redirecting…' : 'Log in with GitHub'}
+                    </Button>
+                  )}
+                </form.Subscribe>
+              )}
             </FieldGroup>
           </form>
         </CardContent>

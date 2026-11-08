@@ -45,6 +45,7 @@ test('register, persist a session, log out, log in, and change password', async 
     await logIn(page, email, password)
     await expect(page.getByTestId('home-heading')).toHaveText('Welcome, Playwright User')
     await page.getByTestId('settings-link').click()
+    await expect(page.locator('[data-slot="badge"]')).toHaveText('Not connected')
 
     await page.getByTestId('password-currentPassword').fill('Wrong-password-123!')
     await page.getByTestId('password-newPassword').fill(newPassword)

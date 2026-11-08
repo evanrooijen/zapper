@@ -156,12 +156,39 @@ test.skipIf(!process.env.AUTH_TEST_DATABASE_URL)(
           `${cookie}; ${stateCookie}`,
         )
       }
+      async function loginWithGitHub() {
+        const response = await request('sign-in/social', {
+          provider: 'github',
+          callbackURL: '/',
+          errorCallbackURL: '/login',
+          disableRedirect: true,
+        })
+        expect(response.status).toBe(200)
+        const authorization = new URL((await response.json()).url)
+        const stateCookie = response.headers
+          .getSetCookie()
+          .map((value) => value.split(';')[0])
+          .join('; ')
+        return request(
+          `callback/github?code=test-code&state=${authorization.searchParams.get('state')}`,
+          undefined,
+          stateCookie,
+        )
+      }
+      const unknownLogin = await loginWithGitHub()
+      expect(unknownLogin.headers.get('location')).toContain('/login?error=signup_disabled')
+      expect(await db.select().from(user).where(eq(user.email, githubEmail))).toHaveLength(0)
       const mismatch = await linkGitHub()
       expect(mismatch.headers.get('location')).toContain('error=')
       expect(await db.select().from(account).where(eq(account.userId, created[0].id))).toHaveLength(
         1,
       )
       githubEmail = email
+      const unlinkedLogin = await loginWithGitHub()
+      expect(unlinkedLogin.headers.get('location')).toContain('/login?error=account_not_linked')
+      expect(await db.select().from(account).where(eq(account.userId, created[0].id))).toHaveLength(
+        1,
+      )
       const linked = await linkGitHub()
       expect(linked.headers.get('location')).toBe('/settings')
       const linkedAccounts = await (await request('list-accounts', undefined, cookie)).json()
@@ -174,6 +201,15 @@ test.skipIf(!process.env.AUTH_TEST_DATABASE_URL)(
       )
       expect((await request('sign-out', {}, cookie)).status).toBe(200)
       expect(await (await request('get-session', undefined, cookie)).json()).toBeNull()
+      const githubLogin = await loginWithGitHub()
+      expect(githubLogin.headers.get('location')).toBe('/')
+      const githubCookie = githubLogin.headers
+        .getSetCookie()
+        .map((value) => value.split(';')[0])
+        .join('; ')
+      expect((await (await request('get-session', undefined, githubCookie)).json()).user.id).toBe(
+        created[0].id,
+      )
     } finally {
       await db.delete(user).where(eq(user.email, email))
       if (db.$client instanceof Pool) await db.$client.end()
