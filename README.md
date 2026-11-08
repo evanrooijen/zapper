@@ -65,7 +65,7 @@ pnpm test:e2e
 pnpm test:e2e:ui
 ```
 
-The CI workflow runs these browser tests after database migrations and unit tests. It copies `.env.example` to `.env` (the job's environment variables take precedence), installs Chromium with its Linux dependencies, and uploads `test-results/` on failure as the `playwright-test-results` artifact, retained for 7 days.
+The CI workflow runs Playwright directly using the job's environment variables after database migrations and unit tests. It installs Chromium with its Linux dependencies and uploads `test-results/` on failure as the `playwright-test-results` artifact, retained for 7 days. No `.env` file is needed in CI.
 
 Playwright uses `BETTER_AUTH_URL` from `.env`, falling back to `http://localhost:3000`, and starts its own server on that port. Stop any server already using the configured port before running the tests. Each run registers a unique disposable account and deletes it (including its sessions and credentials) in cleanup, even after a test failure. Existing accounts are left alone. Use a development or test database, not production. Browser tests are separate from `pnpm test`; failure traces are saved under `test-results/` and may contain test credentials.
 
