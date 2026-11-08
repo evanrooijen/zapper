@@ -33,7 +33,7 @@
 
 - Use [OMDb](https://www.omdbapi.com/) to validate IMDb IDs and series type. A third-party provider's classification is acceptable, including occasional missing matches for valid IMDb shows.
 - An OMDb API key is required. Discard display metadata returned during validation; retrieving metadata for display remains outside the initial scope.
-- Before implementation, verify with live requests that representative miniseries are classified as series. OMDb's documentation does not explicitly establish this mapping.
+- Live compatibility verification passed with the configured OMDb key: miniseries `tt7366338` and `tt0185906`, and series `tt11280740`, each returned HTTP 200, a successful response, the matching IMDb ID, and `Type: "series"`. Display metadata was not stored.
 
 ## Alternatives considered
 

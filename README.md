@@ -83,4 +83,4 @@ Signed-in users can open **My favorites** to add TV shows using an IMDb ID or ti
 
 Set the server-only `OMDB_API_KEY` in `.env` and restart the server to enable validation. Without it, additions fail safely with a retry message; saved lists remain readable and editable. Entries currently show only IMDb IDs and links. Display metadata is deferred.
 
-Before production use, check representative miniseries such as `tt7366338` and `tt0185906` with your OMDb key: successful responses must match the requested IMDb ID and report `Type: "series"`. This live compatibility check is pending until credentials are supplied. Browser tests use a server-side OMDb fixture and never consume provider quota.
+Before production use, check representative miniseries such as `tt7366338` and `tt0185906` with your OMDb key: successful responses must match the requested IMDb ID and report `Type: "series"`. The live compatibility check passed for both miniseries and series `tt11280740`; each returned its matching IMDb ID and `Type: "series"`. Browser tests use a server-side OMDb fixture and never consume provider quota.

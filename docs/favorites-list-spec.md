@@ -81,6 +81,6 @@ Give each signed-in user one favorites list, private by default. Owners add show
 ## Further Notes
 
 - This spec synthesizes the approved design interview; persistence and authorization details make the agreed behavior implementable rather than expanding product scope.
-- OMDb API credentials are required for the live compatibility check and production validation. Miniseries mapping remains unverified: the public documentation describes series type but does not explicitly document miniseries mapping. Resolve a mismatch before implementing an acceptance rule that would reject agreed eligible shows.
+- OMDb API credentials are required for the live compatibility check and production validation. The public documentation describes series type but does not explicitly document miniseries mapping; the live compatibility result below confirms representative miniseries satisfy the implemented acceptance rule.
 - OMDb documentation: https://www.omdbapi.com/ ; API-key signup: https://www.omdbapi.com/apikey.aspx . No live credentialed provider calls have been made during specification.
-- During implementation, the user chose to supply the OMDb key later. Live miniseries compatibility verification remains deferred until that key is available.
+- After the user supplied the OMDb key, live compatibility verification passed for miniseries `tt7366338` and `tt0185906` and series `tt11280740`: each returned HTTP 200, a successful response, the matching IMDb ID, and `Type: "series"`. Display metadata was not stored.
