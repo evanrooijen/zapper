@@ -10,14 +10,23 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as FavoritesRouteImport } from './routes/favorites'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ApiFavoritesRouteImport } from './routes/api.favorites'
+import { Route as ListsListIdRouteImport } from './routes/lists.$listId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api.auth.$'
+import { Route as ApiListsListIdRouteImport } from './routes/api.lists.$listId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritesRoute = FavoritesRouteImport.update({
+  id: '/favorites',
+  path: '/favorites',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -35,48 +44,107 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiFavoritesRoute = ApiFavoritesRouteImport.update({
+  id: '/api/favorites',
+  path: '/api/favorites',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ListsListIdRoute = ListsListIdRouteImport.update({
+  id: '/lists/$listId',
+  path: '/lists/$listId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiListsListIdRoute = ApiListsListIdRouteImport.update({
+  id: '/api/lists/$listId',
+  path: '/api/lists/$listId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/favorites': typeof FavoritesRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
+  '/api/favorites': typeof ApiFavoritesRoute
+  '/lists/$listId': typeof ListsListIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/lists/$listId': typeof ApiListsListIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/favorites': typeof FavoritesRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
+  '/api/favorites': typeof ApiFavoritesRoute
+  '/lists/$listId': typeof ListsListIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/lists/$listId': typeof ApiListsListIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/favorites': typeof FavoritesRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/settings': typeof SettingsRoute
+  '/api/favorites': typeof ApiFavoritesRoute
+  '/lists/$listId': typeof ListsListIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/lists/$listId': typeof ApiListsListIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/settings' | '/api/auth/$'
+  fullPaths:
+    | '/'
+    | '/favorites'
+    | '/login'
+    | '/register'
+    | '/settings'
+    | '/api/favorites'
+    | '/lists/$listId'
+    | '/api/auth/$'
+    | '/api/lists/$listId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/settings' | '/api/auth/$'
-  id: '__root__' | '/' | '/login' | '/register' | '/settings' | '/api/auth/$'
+  to:
+    | '/'
+    | '/favorites'
+    | '/login'
+    | '/register'
+    | '/settings'
+    | '/api/favorites'
+    | '/lists/$listId'
+    | '/api/auth/$'
+    | '/api/lists/$listId'
+  id:
+    | '__root__'
+    | '/'
+    | '/favorites'
+    | '/login'
+    | '/register'
+    | '/settings'
+    | '/api/favorites'
+    | '/lists/$listId'
+    | '/api/auth/$'
+    | '/api/lists/$listId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FavoritesRoute: typeof FavoritesRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   SettingsRoute: typeof SettingsRoute
+  ApiFavoritesRoute: typeof ApiFavoritesRoute
+  ListsListIdRoute: typeof ListsListIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiListsListIdRoute: typeof ApiListsListIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -86,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favorites': {
+      id: '/favorites'
+      path: '/favorites'
+      fullPath: '/favorites'
+      preLoaderRoute: typeof FavoritesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -109,6 +184,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/favorites': {
+      id: '/api/favorites'
+      path: '/api/favorites'
+      fullPath: '/api/favorites'
+      preLoaderRoute: typeof ApiFavoritesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lists/$listId': {
+      id: '/lists/$listId'
+      path: '/lists/$listId'
+      fullPath: '/lists/$listId'
+      preLoaderRoute: typeof ListsListIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -116,15 +205,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/lists/$listId': {
+      id: '/api/lists/$listId'
+      path: '/api/lists/$listId'
+      fullPath: '/api/lists/$listId'
+      preLoaderRoute: typeof ApiListsListIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FavoritesRoute: FavoritesRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   SettingsRoute: SettingsRoute,
+  ApiFavoritesRoute: ApiFavoritesRoute,
+  ListsListIdRoute: ListsListIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiListsListIdRoute: ApiListsListIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

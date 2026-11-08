@@ -15,7 +15,11 @@ export default defineConfig({
   },
   projects: [{ name: 'chromium', use: devices['Desktop Chrome'] }],
   webServer: {
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
+    env: {
+      NODE_OPTIONS: `${process.env.NODE_OPTIONS ?? ''} --import=${new URL('./e2e/omdb-preload.mjs', import.meta.url).pathname}`,
+      OMDB_API_KEY: 'browser-test-key',
+    },
     command: `pnpm exec vite dev --host localhost --port ${port} --strictPort`,
     url: baseURL,
     timeout: 120_000,

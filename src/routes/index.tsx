@@ -74,6 +74,9 @@ function Home() {
             <div className="flex gap-3">
               {user ? (
                 <>
+                  <Link to="/favorites" className="underline">
+                    My favorites
+                  </Link>
                   <Button
                     data-testid="settings-link"
                     variant="outline"
