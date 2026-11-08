@@ -13,6 +13,7 @@ if (driver !== 'postgres' && driver !== 'neon') {
   throw new Error('DB_DRIVER must be postgres or neon')
 }
 
-export const db = driver === 'neon'
-  ? neonDrizzle(neon(url), { schema })
-  : postgresDrizzle(new Pool({ connectionString: url }), { schema })
+export const db =
+  driver === 'neon'
+    ? neonDrizzle(neon(url), { schema })
+    : postgresDrizzle(new Pool({ connectionString: url }), { schema })

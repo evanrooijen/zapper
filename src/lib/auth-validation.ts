@@ -11,11 +11,13 @@ export const registrationSchema = loginSchema.extend({
   password: z.string().min(8, 'Use at least 8 characters.').max(128),
 })
 
-export const passwordChangeSchema = z.object({
-  currentPassword: loginSchema.shape.password,
-  newPassword: registrationSchema.shape.password,
-  confirmPassword: z.string(),
-}).refine((value) => value.newPassword === value.confirmPassword, {
-  message: 'Passwords do not match.',
-  path: ['confirmPassword'],
-})
+export const passwordChangeSchema = z
+  .object({
+    currentPassword: loginSchema.shape.password,
+    newPassword: registrationSchema.shape.password,
+    confirmPassword: z.string(),
+  })
+  .refine((value) => value.newPassword === value.confirmPassword, {
+    message: 'Passwords do not match.',
+    path: ['confirmPassword'],
+  })

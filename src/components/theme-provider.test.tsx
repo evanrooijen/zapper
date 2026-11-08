@@ -17,14 +17,21 @@ function initialTheme(stored: string | null, systemDark = false, blocked = false
   const router = createRouter({ routeTree: createRootRoute(), isServer: true })
   const html = renderToStaticMarkup(
     <RouterContextProvider router={router}>
-      <ThemeProvider><p>Hello</p></ThemeProvider>
+      <ThemeProvider>
+        <p>Hello</p>
+      </ThemeProvider>
     </RouterContextProvider>,
   )
   const script = html.match(/<script[^>]*>([\s\S]*?)<\/script>/)?.[1]
   expect(script).toBeTruthy()
   runInNewContext(script!, {
     document: { documentElement: root, currentScript: { remove() {} } },
-    localStorage: { getItem: () => { if (blocked) throw new Error('Blocked'); return stored } },
+    localStorage: {
+      getItem: () => {
+        if (blocked) throw new Error('Blocked')
+        return stored
+      },
+    },
     matchMedia: () => ({ matches: systemDark }),
   })
   return { classes: [...classes], colorScheme: root.style.colorScheme }

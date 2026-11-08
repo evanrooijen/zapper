@@ -3,10 +3,13 @@ import { ScriptOnce } from '@tanstack/react-router'
 
 type Theme = 'dark' | 'light' | 'system'
 
-const ThemeProviderContext = createContext<{
-  theme: Theme
-  setTheme: (theme: Theme) => void
-} | undefined>(undefined)
+const ThemeProviderContext = createContext<
+  | {
+      theme: Theme
+      setTheme: (theme: Theme) => void
+    }
+  | undefined
+>(undefined)
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('dark')

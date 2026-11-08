@@ -33,12 +33,16 @@ Run `pnpm db:migrate` against the production database before starting the deploy
 ## Checks and schema changes
 
 ```sh
+pnpm lint
+pnpm format:check
 pnpm check
 pnpm test
 # Include the real database authentication test (after db:migrate):
 AUTH_TEST_DATABASE_URL=postgresql://app:app@localhost:5432/app pnpm test
 pnpm build
 ```
+
+Run `pnpm format` to format files and `pnpm lint:fix` to apply automatic lint fixes.
 
 After changing `src/db/schema.ts`, run `pnpm db:generate` and commit the generated migration, then apply it with `pnpm db:migrate`.
 

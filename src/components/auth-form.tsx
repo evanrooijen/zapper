@@ -5,7 +5,14 @@ import { LoaderCircle } from 'lucide-react'
 import { authClient } from '@/lib/auth-client'
 import { loginSchema, registrationSchema } from '@/lib/auth-validation'
 import { Button } from '@/components/ui/button'
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card'
 import { Field, FieldLabel, FieldGroup, FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -41,11 +48,22 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
     <main className="flex min-h-svh items-center justify-center p-6">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle><h1>{registering ? 'Create an account' : 'Welcome back'}</h1></CardTitle>
-          <CardDescription>{registering ? 'Enter your details to get started.' : 'Log in with your email and password.'}</CardDescription>
+          <CardTitle>
+            <h1>{registering ? 'Create an account' : 'Welcome back'}</h1>
+          </CardTitle>
+          <CardDescription>
+            {registering
+              ? 'Enter your details to get started.'
+              : 'Log in with your email and password.'}
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={(event) => { event.preventDefault(); void form.handleSubmit() }}>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault()
+              void form.handleSubmit()
+            }}
+          >
             <FieldGroup>
               {fields.map((name) => (
                 <form.Field key={name} name={name}>
@@ -53,12 +71,22 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
                     const invalid = field.state.meta.isTouched && !field.state.meta.isValid
                     return (
                       <Field data-invalid={invalid}>
-                        <FieldLabel htmlFor={name}>{name === 'name' ? 'Name' : name === 'email' ? 'Email' : 'Password'}</FieldLabel>
+                        <FieldLabel htmlFor={name}>
+                          {name === 'name' ? 'Name' : name === 'email' ? 'Email' : 'Password'}
+                        </FieldLabel>
                         <Input
                           id={name}
                           name={name}
-                          type={name === 'password' ? 'password' : name === 'email' ? 'email' : 'text'}
-                          autoComplete={name === 'password' ? (registering ? 'new-password' : 'current-password') : name}
+                          type={
+                            name === 'password' ? 'password' : name === 'email' ? 'email' : 'text'
+                          }
+                          autoComplete={
+                            name === 'password'
+                              ? registering
+                                ? 'new-password'
+                                : 'current-password'
+                              : name
+                          }
                           required
                           minLength={name === 'password' && registering ? 8 : 1}
                           maxLength={name === 'password' ? 128 : name === 'name' ? 100 : undefined}
@@ -68,17 +96,25 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
                           aria-invalid={invalid}
                           aria-describedby={invalid ? `${name}-error` : undefined}
                         />
-                        {invalid && <FieldError id={`${name}-error`} errors={field.state.meta.errors} />}
+                        {invalid && (
+                          <FieldError id={`${name}-error`} errors={field.state.meta.errors} />
+                        )}
                       </Field>
                     )
                   }}
                 </form.Field>
               ))}
-              {error && <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>}
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
               <form.Subscribe selector={(state) => state.isSubmitting}>
                 {(submitting) => (
                   <Button type="submit" disabled={submitting}>
-                    {submitting && <LoaderCircle data-icon="inline-start" className="animate-spin" />}
+                    {submitting && (
+                      <LoaderCircle data-icon="inline-start" className="animate-spin" />
+                    )}
                     {submitting ? 'Please wait…' : registering ? 'Create account' : 'Log in'}
                   </Button>
                 )}
@@ -87,8 +123,12 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
           </form>
         </CardContent>
         <CardFooter>
-          <p>{registering ? 'Already have an account?' : 'Need an account?'}{' '}
-            <Link to={registering ? '/login' : '/register'} className="underline underline-offset-4">
+          <p>
+            {registering ? 'Already have an account?' : 'Need an account?'}{' '}
+            <Link
+              to={registering ? '/login' : '/register'}
+              className="underline underline-offset-4"
+            >
               {registering ? 'Log in' : 'Register'}
             </Link>
           </p>
