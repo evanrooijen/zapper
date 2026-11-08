@@ -39,6 +39,7 @@ test('replaces the skeleton with the signed-in user and logout action', () => {
   expect(html).toContain('Welcome, Ada')
   expect(html).toContain('ada@example.com')
   expect(html).toContain('Log out')
+  expect(html).toContain('href="/settings"')
   expect(html).not.toContain('data-slot="skeleton"')
 })
 

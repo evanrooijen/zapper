@@ -45,3 +45,11 @@ After changing `src/db/schema.ts`, run `pnpm db:generate` and commit the generat
 Basic authentication includes signup, login, session cookies and logout. Email delivery, verification and password reset are outside this setup.
 
 Forms follow the [shadcn TanStack Form guide](https://ui.shadcn.com/docs/forms/tanstack-form); the server follows the [Better Auth TanStack integration](https://better-auth.com/docs/integrations/tanstack).
+
+## User settings and GitHub connections
+
+Signed-in users can open **Settings** from the home page to change their password or connect GitHub. Password changes require the current password and revoke other sessions.
+
+To enable GitHub, create a GitHub OAuth App and set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` on the server, then restart it. Use `http://localhost:3000/api/auth/callback/github` as the authorization callback URL locally, or `<BETTER_AUTH_URL>/api/auth/callback/github` in production. Use separate OAuth apps for local and production environments. The default GitHub scopes include `user:email`.
+
+The GitHub account must have a verified email matching the app account. Connections are added explicitly from settings; implicit account linking and new GitHub-only registrations are disabled. See the [Better Auth GitHub setup](https://better-auth.com/docs/authentication/github) and [account linking documentation](https://better-auth.com/docs/concepts/users-accounts).

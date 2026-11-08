@@ -48,7 +48,10 @@ function Home() {
             </p>
             <div className="flex gap-3">
               {user ? (
-                <Button disabled={signingOut} onClick={() => void signOut()}>{signingOut ? 'Logging out…' : 'Log out'}</Button>
+                <>
+                  <Button variant="outline" nativeButton={false} render={<Link to="/settings" />}>Settings</Button>
+                  <Button disabled={signingOut} onClick={() => void signOut()}>{signingOut ? 'Logging out…' : 'Log out'}</Button>
+                </>
               ) : (
                 <>
                   <Button nativeButton={false} render={<Link to="/login" />}>Log in</Button>

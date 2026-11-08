@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { loginSchema, registrationSchema } from './auth-validation'
+import { loginSchema, registrationSchema, passwordChangeSchema } from './auth-validation'
 
 const account = { name: 'Ada', email: 'ada@example.com', password: 'strong-password' }
 
@@ -16,4 +16,17 @@ test('login allows existing short passwords but rejects empty credentials', () =
   expect(loginSchema.safeParse({ ...account, name: '', password: 'short' }).success).toBe(true)
   expect(loginSchema.safeParse({ ...account, password: '' }).success).toBe(false)
   expect(loginSchema.safeParse({ ...account, email: '' }).success).toBe(false)
+})
+
+
+test('password changes require the current password and matching valid new passwords', () => {
+  const value = { currentPassword: 'old-password', newPassword: 'new-password', confirmPassword: 'new-password' }
+  expect(passwordChangeSchema.safeParse(value).success).toBe(true)
+  for (const invalid of [
+    { currentPassword: '' }, { newPassword: 'short', confirmPassword: 'short' },
+    { newPassword: 'a'.repeat(129), confirmPassword: 'a'.repeat(129) },
+    { confirmPassword: 'different-password' },
+  ]) {
+    expect(passwordChangeSchema.safeParse({ ...value, ...invalid }).success).toBe(false)
+  }
 })
