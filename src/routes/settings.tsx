@@ -31,7 +31,12 @@ function Settings() {
   return (
     <main className="mx-auto flex min-h-svh w-full max-w-xl flex-col gap-6 px-6 py-12">
       <div className="flex items-center justify-between gap-4">
-        <Button variant="outline" nativeButton={false} render={<Link to="/" />}>
+        <Button
+          data-testid="home-link"
+          variant="outline"
+          nativeButton={false}
+          render={<Link to="/" />}
+        >
           Back to home
         </Button>
         <ModeToggle />
@@ -52,7 +57,7 @@ function Settings() {
           githubEnabled={githubEnabled}
         />
       ) : (
-        <p>
+        <p data-testid="settings-login-required">
           <Link to="/login" className="underline underline-offset-4">
             Log in
           </Link>{' '}
@@ -180,6 +185,7 @@ function AccountSettings({
                         </FieldLabel>
                         <Input
                           id={name}
+                          data-testid={`password-${name}`}
                           name={name}
                           type="password"
                           autoComplete={
@@ -206,14 +212,18 @@ function AccountSettings({
                 </form.Field>
               ))}
               {passwordError && (
-                <Alert variant="destructive">
+                <Alert data-testid="password-error" variant="destructive">
                   <AlertDescription>{passwordError}</AlertDescription>
                 </Alert>
               )}
-              {success && <p role="status">Password updated.</p>}
+              {success && (
+                <p data-testid="password-success" role="status">
+                  Password updated.
+                </p>
+              )}
               <form.Subscribe selector={(state) => state.isSubmitting}>
                 {(submitting) => (
-                  <Button type="submit" disabled={submitting}>
+                  <Button data-testid="password-submit" type="submit" disabled={submitting}>
                     {submitting ? 'Updating…' : 'Update password'}
                   </Button>
                 )}

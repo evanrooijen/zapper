@@ -56,5 +56,19 @@ jobs:
         run: pnpm db:migrate
       - name: Test
         run: pnpm test
+      - name: Prepare browser test environment
+        run: cp .env.example .env
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Test authentication in browser
+        run: pnpm test:e2e
+      - name: Upload Playwright failure traces
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-test-results
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Build
         run: pnpm build

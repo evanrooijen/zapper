@@ -50,6 +50,25 @@ Basic authentication includes signup, login, session cookies and logout. Email d
 
 Forms follow the [shadcn TanStack Form guide](https://ui.shadcn.com/docs/forms/tanstack-form); the server follows the [Better Auth TanStack integration](https://better-auth.com/docs/integrations/tanstack).
 
+## Browser tests
+
+Playwright tests registration, session persistence, logout, invalid credentials, and password changes through the real UI and database. It verifies that the old password is rejected and the new password works.
+
+Both e2e scripts use dotenvx to load `.env` before starting Playwright. With `.env` configured for a local development or test database:
+
+```sh
+docker compose up -d --wait
+pnpm db:migrate
+pnpm exec playwright install chromium
+pnpm test:e2e
+# Optional interactive runner:
+pnpm test:e2e:ui
+```
+
+The CI workflow runs these browser tests after database migrations and unit tests. It copies `.env.example` to `.env` (the job's environment variables take precedence), installs Chromium with its Linux dependencies, and uploads `test-results/` on failure as the `playwright-test-results` artifact, retained for 7 days.
+
+Playwright uses `BETTER_AUTH_URL` from `.env`, falling back to `http://localhost:3000`, and starts its own server on that port. Stop any server already using the configured port before running the tests. Each run registers a unique disposable account and deletes it (including its sessions and credentials) in cleanup, even after a test failure. Existing accounts are left alone. Use a development or test database, not production. Browser tests are separate from `pnpm test`; failure traces are saved under `test-results/` and may contain test credentials.
+
 ## User settings and GitHub connections
 
 Signed-in users can open **Settings** from the home page to change their password or connect GitHub. Password changes require the current password and revoke other sessions.

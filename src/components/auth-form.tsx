@@ -76,6 +76,7 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
                         </FieldLabel>
                         <Input
                           id={name}
+                          data-testid={`auth-${name}`}
                           name={name}
                           type={
                             name === 'password' ? 'password' : name === 'email' ? 'email' : 'text'
@@ -105,13 +106,13 @@ export function AuthForm({ mode }: { mode: 'login' | 'register' }) {
                 </form.Field>
               ))}
               {error && (
-                <Alert variant="destructive">
+                <Alert data-testid="auth-error" variant="destructive">
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
               <form.Subscribe selector={(state) => state.isSubmitting}>
                 {(submitting) => (
-                  <Button type="submit" disabled={submitting}>
+                  <Button data-testid="auth-submit" type="submit" disabled={submitting}>
                     {submitting && (
                       <LoaderCircle data-icon="inline-start" className="animate-spin" />
                     )}

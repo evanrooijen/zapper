@@ -56,12 +56,17 @@ function Home() {
         ) : (
           <>
             <h1
+              data-testid="home-heading"
               className="truncate text-4xl font-bold"
               title={user ? `Welcome, ${user.name}` : undefined}
             >
               {user ? `Welcome, ${user.name}` : 'Welcome'}
             </h1>
-            <p className="truncate text-muted-foreground" title={user?.email}>
+            <p
+              data-testid="home-session"
+              className="truncate text-muted-foreground"
+              title={user?.email}
+            >
               {user
                 ? `You’re logged in as ${user.email}.`
                 : 'Log in or create an account to get started.'}
@@ -69,19 +74,37 @@ function Home() {
             <div className="flex gap-3">
               {user ? (
                 <>
-                  <Button variant="outline" nativeButton={false} render={<Link to="/settings" />}>
+                  <Button
+                    data-testid="settings-link"
+                    variant="outline"
+                    nativeButton={false}
+                    render={<Link to="/settings" />}
+                  >
                     Settings
                   </Button>
-                  <Button disabled={signingOut} onClick={() => void signOut()}>
+                  <Button
+                    data-testid="logout-button"
+                    disabled={signingOut}
+                    onClick={() => void signOut()}
+                  >
                     {signingOut ? 'Logging out…' : 'Log out'}
                   </Button>
                 </>
               ) : (
                 <>
-                  <Button nativeButton={false} render={<Link to="/login" />}>
+                  <Button
+                    data-testid="login-link"
+                    nativeButton={false}
+                    render={<Link to="/login" />}
+                  >
                     Log in
                   </Button>
-                  <Button variant="outline" nativeButton={false} render={<Link to="/register" />}>
+                  <Button
+                    data-testid="register-link"
+                    variant="outline"
+                    nativeButton={false}
+                    render={<Link to="/register" />}
+                  >
                     Create account
                   </Button>
                 </>

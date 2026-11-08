@@ -15,7 +15,9 @@
     "format": "oxfmt --write",
     "format:check": "oxfmt --check",
     "check": "pnpm generate-routes && tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run src",
+    "test:e2e": "dotenvx run -f .env -- playwright test",
+    "test:e2e:ui": "dotenvx run -f .env -- playwright test --ui",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio"
@@ -45,6 +47,8 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@dotenvx/dotenvx": "^2.38.2",
+    "@playwright/test": "^1.65.0",
     "@tanstack/devtools-vite": "latest",
     "@tanstack/router-cli": "^1.132.0",
     "@types/node": "^24",
