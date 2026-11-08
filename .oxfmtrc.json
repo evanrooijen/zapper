@@ -3,6 +3,7 @@
   "semi": false,
   "singleQuote": true,
   "ignorePatterns": [
+    "**/skills/**",
     "src/routeTree.gen.ts",
     "src/components/ui/**",
     "pnpm-lock.yaml",

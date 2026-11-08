@@ -1,6 +1,7 @@
 # Domain docs
 
 This repo uses a single-context layout:
+
 - `GLOSSARY.md` at the repo root.
 - Architecture decision records in `docs/adr/`.
 
